@@ -110,11 +110,11 @@ class Game:
         self.help_export_frame.grid(row=5,pady=10)
 
         self.help_btn= Button(self.help_export_frame, text="Help / Rules",
-                              font="arial 10 bold", bg="#808080", fg="white")
+                              font="arial 10 bold", bg="#95E06C", fg="white")
         self.help_btn.grid(row=0, column=0, padx=2)
 
         self.stats_btn = Button(self.help_export_frame, text="Game stats...",
-                              font ="arial 10 bold", bg="#808080", fg="white")
+                              font="arial 10 bold", bg="#95E06C", fg="white")
         self.stats_btn.grid(row=0, column=1, padx=2)
 
 

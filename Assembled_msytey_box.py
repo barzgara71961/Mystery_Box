@@ -62,7 +62,7 @@ class Mystery:
         # five dollar button (row 2 column 0 )
         self.five_dollar_button = Button(self.money_button_frame,
                                          text="Low $5",font="arial 10 bold", fg="black",
-                                         bg="#95E06C",padx=12, pady=12,
+                                         bg="#95E06C", padx=12, pady=12,
                                          command=lambda: self.to_game(5))
         self.five_dollar_button.grid(row=0, column=1)
 
