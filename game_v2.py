@@ -189,6 +189,9 @@ class Game:
         self.multiplier = IntVar()
         self.multiplier.set(stakes)
 
+        # List for holding statistics
+        self.round_stats_list = []
+
         # GUI setup
         self.game_box = Toplevel()
 
@@ -219,16 +222,21 @@ class Game:
         self.box_frame = Frame(self.game_frame)
         self.box_frame.grid(row=2)
 
+        photo = PhotoImage(file="question.jpg")
+
         self.prize1_label = Label(self.box_frame, text="?\n", font=box_text,
-                                  bg=box_back, width=box_width, padx=10, pady=10)
+                                  image=photo, padx=10, pady=10)
+        self.prize1_label.photo = photo
         self.prize1_label.grid(row=0, column=0)
 
         self.prize2_label = Label(self.box_frame, text="?\n", font=box_text,
-                                  bg=box_back, width=box_width, padx=10, pady=10)
+                                  image=photo, padx=10, pady=10)
+        self.prize2_label.photo = photo
         self.prize2_label.grid(row=0, column=1)
 
         self.prize3_label = Label(self.box_frame, text="?\n", font=box_text,
-                                  bg=box_back, width=box_width, padx=10, pady=10)
+                                  image=photo, padx=10, pady=10)
+        self.prize3_label.photo = photo
         self.prize3_label.grid(row=0, column=2)
 
         # Play button goes here
@@ -281,28 +289,38 @@ class Game:
             prize_num = random.randint(1, 100)
 
             if 0 < prize_num <= 5:
+                prize = PhotoImage(file="gold.jpg")
                 prize = "gold\n(${})".format(5 * stakes_multiplier)
                 back_color = "#FFD700"  # gold colour
                 round_winnings += 5 * stakes_multiplier
             elif 6 < prize_num <= 20:
+                prize = PhotoImage(file="silver.jpg")
                 prize = "sliver\n(${})".format(2 * stakes_multiplier)
                 back_color = "#C0C0C0"  # silver colour
                 round_winnings += 2 * stakes_multiplier
             elif 21 < prize_num <= 35:
+                prize = PhotoImage(file="copper.jpeg")
                 prize = "copper\n(${})".format(1 * stakes_multiplier)
                 back_color = "#B87333"  # copper colour
                 round_winnings += stakes_multiplier
             else:
+                prize = PhotoImage(file="lead.jpg")
                 prize = "lead\n($0)"
-                back_color = "#6D6A65"  # lead colour
 
             prizes.append(prize)
-            background.append(back_color)
+            background.append(prize_list)
+
+        photo1 = prizes[0]
+        photo2 = prizes[1]
+        photo3 = prizes[2]
 
         # Display prizes...
-        self.prize1_label.config(text=prizes[0], bg=background[0])
-        self.prize2_label.config(text=prizes[1], bg=background[1])
-        self.prize3_label.config(text=prizes[2], bg=background[2])
+        self.prize1_label.config(image=photo1)
+        self.prize1_label.photo = photo1
+        self.prize2_label.config(image=photo2)
+        self.prize2_label.photo = photo2
+        self.prize3_label.config(image=photo3)
+        self.prize3_label.photo = photo3
 
         # Deduct cost of game
         current_balance -= 5 * stakes_multiplier
@@ -317,6 +335,16 @@ class Game:
                             "Current Balance: ${}".format(5 * stakes_multiplier,
                                                           round_winnings,
                                                           current_balance)
+        # Add round results to statistics list
+        round_summary ="{} | {} | {} - Cost: ${} | " \
+                       "Payback: ${} | Current Balance:" \
+                       "${}".format(stats_prizes[0], stats_prizes[1],
+                                    stats_prizes[2],
+                                    5 * stakes_multiplier,round_winnings,
+                                    current_balance)
+        self.round_stats_list.append(round_summary)
+        print(self.round_stats_list)
+
 
         # Edit label so user can see their balance
         self.balance_label.configure(text=balance_statement)
