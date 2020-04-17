@@ -291,22 +291,22 @@ class Game:
 
             if 0 < prize_num <= 5:
                 prize = PhotoImage(file="gold_med.gif")
-                prize = "gold\n(${})".format(5 * stakes_multiplier)
+                prize_list = "gold\n(${})".format(5 * stakes_multiplier)
                 back_color = "#FFD700"  # gold colour
                 round_winnings += 5 * stakes_multiplier
             elif 6 < prize_num <= 20:
                 prize = PhotoImage(file="silver_med.gif")
-                prize = "sliver\n(${})".format(2 * stakes_multiplier)
+                prize_list = "sliver\n(${})".format(2 * stakes_multiplier)
                 back_color = "#C0C0C0"  # silver colour
                 round_winnings += 2 * stakes_multiplier
             elif 21 < prize_num <= 35:
                 prize = PhotoImage(file="copper_med.gif")
-                prize = "copper\n(${})".format(1 * stakes_multiplier)
+                prize_list = "copper\n(${})".format(1 * stakes_multiplier)
                 back_color = "#B87333"  # copper colour
                 round_winnings += stakes_multiplier
             else:
                 prize = PhotoImage(file="lead.gif")
-                prize = "lead\n($0)"
+                prize_list = "lead\n($0)"
 
             prizes.append(prize)
             stats_prizes.append(prize_list)
