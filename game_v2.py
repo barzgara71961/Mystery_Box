@@ -89,7 +89,7 @@ class Mystery:
 
         # help button (row 2 column 0 )
         self.help_button = Button(self.help_export_frame, text="How To Play", font="arial 10 bold", fg="black",
-                                  bg="#95E06C", padx=12, pady=12, )
+                                  bg="#95E06C", padx=12, pady=12,command=self.how_to_play )
         self.help_button.grid(row=0, column=2)
 
     def check_funds(self):
@@ -172,6 +172,47 @@ class Mystery:
         # hide start up window
         root.withdraw()
 
+    def how_to_play(self):
+        print("you need help")
+        get_help = How_to_play(self)
+        #get_help.help_text.configure(text="i really dont want to write something long out")
+
+
+class How_to_play:
+    def __init__(self, partner):
+        background = "#68B684"
+
+        # disable help button
+        partner.help_button.config(state=DISABLED)
+
+        # Set up child window (ie: help box)
+        self.help_box = Toplevel()
+
+        # Set up GUI Frame
+        self.help_frame = Frame(self.help_box, width=300, bg=background)
+        self.help_frame.grid()
+        # Set up help heading (row 0)
+        self.how_heading = Label(self.help_frame,
+                                 text="how to play ",
+                                 font="arial 20 bold",bg=background)
+        self.how_heading.grid(row=0)
+        # Help text (label, row 1)
+        self.help_text = Label(self.help_frame,
+                               text="i really dont want to write something long out",
+                               justify=LEFT,width=50, bg=background,wrap=200)
+        self.help_text.grid(column=0,row=1)
+
+        # Dismiss button (row 2)
+        self.dismiss_btn = Button(self.help_frame,text="Dismiss",padx=12, pady=12,bg="red",
+                                  font="arial 10 bold",
+                                  command=partial(self.close_help, partner))
+        self.dismiss_btn.grid(row=2, pady=10)
+
+    def close_help(self, partner):
+        # Put help button back to normal
+        partner.help_button.config(state=NORMAL)
+        self.help_box.destroy()
+
 
 class Game:
     def __init__(self, partner, stakes, starting_balance):
@@ -191,6 +232,7 @@ class Game:
 
         # List for holding statistics
         self.round_stats_list = []
+        self.game_stats_list = [starting_balance, starting_balance]
 
         # GUI setup
         self.game_box = Toplevel()
@@ -263,12 +305,12 @@ class Game:
 
         self.help_btn = Button(self.help_export_frame, text="Help / Rules",
                                font="arial 10 bold", bg="#95E06C", fg="black"
-                               , padx=12, pady=12)
+                               , padx=12, pady=12,command=self.help_rule)
         self.help_btn.grid(row=0, column=0)
 
         self.stats_btn = Button(self.help_export_frame, text="Game stats...",
-                                font="arial 10 bold", bg="#95E06C", fg="black"
-                                , padx=12, pady=12)
+                                font="arial 10 bold", bg="#95E06C", fg="black", padx=12, pady=12,
+                                command=lambda: self.to_stats(self.round_stats_list, self.game_stats_list))
         self.stats_btn.grid(row=0, column=1)
 
         self.quit_btn = Button(self.game_frame, text="Quit",
@@ -276,6 +318,10 @@ class Game:
                                fg="black", padx=12, pady=12,
                                command=self.to_quit)
         self.quit_btn.grid(row=6)
+
+    def help_rule(self):
+        print("you need help")
+        get_help_rule = Help_rules(self)
 
     def reveal_boxes(self):
         # retrieve the balance from initial function
@@ -331,6 +377,9 @@ class Game:
 
         # set balance to new balance
         self.balance.set(current_balance)
+        # update game_stats_list with current balance (replace item in
+        # position 1 with current balance)
+        self.game_stats_list[1]= current_balance
 
         balance_statement = "Game Cost: $ {}\nPayback: ${} \n" \
                             "Current Balance: ${}".format(5 * stakes_multiplier,
@@ -361,10 +410,138 @@ class Game:
             self.balance_label.config(fg="black", font="arial 10 bold",bg="#68B684",
                                       text=balance_statement)
 
+
     def to_quit(self):
         root.destroy()
 
+    def to_stats(self, game_history, game_stats):
+        GameStats(self, game_history, game_stats)
 
+
+class Help_rules:
+    def __init__(self, partner):
+        background = "#68B684"
+
+        # disable help button
+        #partner.help_button.config(state=DISABLED)
+
+        # Set up child window (ie: help box)
+        self.help_box = Toplevel()
+
+        # Set up GUI Frame
+        self.help_frame = Frame(self.help_box, width=300, bg=background)
+        self.help_frame.grid()
+        # Set up help heading (row 0)
+        self.how_heading = Label(self.help_frame,
+                                 text="how to play ",
+                                 font="arial 20 bold",bg=background)
+        self.how_heading.grid(row=0)
+        # Help text (label, row 1)
+        self.help_text = Label(self.help_frame,
+                               text="i really dont want to write something long out",
+                               justify=LEFT,width=50, bg=background,wrap=200)
+        self.help_text.grid(column=0,row=1)
+
+        # Dismiss button (row 2)
+        self.dismiss_btn = Button(self.help_frame,text="Dismiss",padx=12, pady=12,bg="red",
+                                  font="arial 10 bold",
+                                  command=partial(self.close_help, partner))
+        self.dismiss_btn.grid(row=2, pady=10)
+
+    def close_help(self, partner):
+        # Put help button back to normal
+        partner.help_button.config(state=DISABLED)
+        self.help_box.destroy()
+
+class GameStats:
+    def __init__(self, partner, game_history, game_stats):
+
+        print(game_history)
+
+        # disable help button
+        partner.stats_btn.config(state=DISABLED)
+
+        heading = "arial 10 bold"
+        content = "arial 10"
+
+        # set up child window
+        self.stats_box = Toplevel()
+
+        # if user press cross at top, close help and releases help button
+        # self.stats_box.protocol('WM_DELETE_WINDOW', partner(self.close_stats, partner))
+
+        # set up GUI frame
+        self.stats_frame = Frame(self.stats_box)
+        self.stats_frame.grid()
+
+        # Set up heading
+        self.stats_heading_label = Label(self.stats_frame, text="Game Statistic",
+                                         font="arial 15 bold")
+        self.stats_heading_label.grid(row=0)
+
+        # to export
+        self.export_instructions = Label(self.stats_frame,
+                                         text="here are your game stats."
+                                         "please use the export button to"
+                                         "access the result of each "
+                                         "round that you played", wrap=200,
+                                         font="arial 10 italic",
+                                         justify=LEFT, fg="black")
+        self.export_instructions.grid(row=1)
+
+        # Starting balance
+        self.details_frame = Frame(self.stats_frame)
+        self.details_frame.grid(row=2)
+
+        # starting balance
+
+        self.start_balance_label = Label(self.details_frame,
+                                         text="starting balance:", font=heading,
+                                         anchor="e")
+        self.start_balance_label.grid(row=0, column=0)
+
+        self.start_balance_value_label = Label(self.details_frame, font=content,
+                                               text="${}".format(game_stats[0]),anchor="w")
+        self.start_balance_value_label.grid(row=0,column=1)
+
+        # current balance
+        self.current_balance_label = Label(self.details_frame,
+                                           text="Current Balance:", font=heading,
+                                           anchor="e")
+        self.current_balance_label.grid(row=1, column=0)
+
+        self.current_balance_value_label = Label(self.details_frame, font=content,
+                                                 text="$()".format(game_stats[1]),anchor="w")
+        self.current_balance_value_label.grid(row=1, column=1)
+
+        if game_stats[1]> game_stats[0]:
+            win_loss = "Amount won:"
+            amount = game_stats[1] - game_stats[0]
+            win_loss_fg = "green"
+        else:
+            win_loss = "Amount loss:"
+            amount = game_stats[0] - game_stats[1]
+            win_loss_fg = "#660000"
+
+        # Amount won/ loss
+        self.wind_loss_label = Label(self.details_frame,
+                                    text=win_loss, font=heading, anchor="e")
+        self.wind_loss_label.grid(row=2, column=0)
+
+        self.wind_loss_value_label = Label(self.details_frame, font=content,
+                                           text="${}".format(amount),
+                                           fg=win_loss_fg, anchor="w")
+        self.wind_loss_value_label.grid(row=2, column=1)
+
+        # rounds played
+        self.games_played_label = Label(self.details_frame,
+                                        text="round played:", font=heading,
+                                        anchor="e")
+        self.games_played_label.grid(row=4, column=0)
+
+        self.games_played_value_label = Label(self.details_frame, font=content,
+                                              text=len(game_history), anchor="w")
+        self.games_played_value_label.grid(row=4, column=2)
 # main routine
 if __name__ == "__main__":
     root = Tk()
