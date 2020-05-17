@@ -217,7 +217,7 @@ class How_to_play:
 class Game:
     def __init__(self, partner, stakes, starting_balance):
         print(stakes)
-        print(starting_balance)
+        starting_balance = int(starting_balance)
 
         background_color = "#68B684"
 
@@ -377,6 +377,7 @@ class Game:
 
         # set balance to new balance
         self.balance.set(current_balance)
+
         # update game_stats_list with current balance (replace item in
         # position 1 with current balance)
         self.game_stats_list[1]= current_balance
@@ -423,7 +424,7 @@ class Help_rules:
         background = "#68B684"
 
         # disable help button
-        #partner.help_button.config(state=DISABLED)
+        partner.help_btn.config(state=DISABLED)
 
         # Set up child window (ie: help box)
         self.help_box = Toplevel()
@@ -450,16 +451,18 @@ class Help_rules:
 
     def close_help(self, partner):
         # Put help button back to normal
-        partner.help_button.config(state=DISABLED)
+        partner.help_btn.config(state=NORMAL)   # Changed to normal so help button becomes available again.
         self.help_box.destroy()
 
 class GameStats:
     def __init__(self, partner, game_history, game_stats):
 
-        print(game_history)
+        # print(game_history)
+        print("Game Stats: ", game_stats)
 
         # disable help button
-        partner.stats_btn.config(state=DISABLED)
+        # Commented out by GK because it is in the wrong place.
+        # partner.stats_btn.config(state=DISABLED)
 
         heading = "arial 10 bold"
         content = "arial 10"
@@ -514,7 +517,7 @@ class GameStats:
                                                  text="$()".format(game_stats[1]),anchor="w")
         self.current_balance_value_label.grid(row=1, column=1)
 
-        if game_stats[1]> game_stats[0]:
+        if game_stats[1] > game_stats[0]:
             win_loss = "Amount won:"
             amount = game_stats[1] - game_stats[0]
             win_loss_fg = "green"
